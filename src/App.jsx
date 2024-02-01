@@ -1,37 +1,67 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import Card from './components/Card.jsx'
 import charizard from './assets/charizard.png'
 
 function App() {
-	const [newCardsArray, setNewCardsArray] = useState([]);
-	const cardArray = [];
+	const [reorderedCards, setreorderedCards] = useState([]);
+	const [clickedCards, setclickedCards] = useState([]);
+	const [points, setpoints] = useState(0);
+	const [maxPoints, setmaxPoints] = useState(0);
+	const cards = [];
 
-	for (let i = 0; i < 12; i++) {
-		cardArray.push(<Card key={i} title={`Charizard${i}`} image={charizard} />);
-	}
+	useEffect(() => {
+		shuffle();
+	}, [clickedCards])
 
-	const handleClick = () => {
-		let mockArray = [...cardArray];
-		let newCardsArray = [];
-		
-		while (mockArray.length != 0) {
-			const randomIndex = Math.floor(Math.random() * mockArray.length);
-			const randomCard = mockArray[randomIndex];
-			newCardsArray.push(randomCard);
-			mockArray.splice(randomIndex, 1);
+	const storeClickedCard = (card) => {
+		if (clickedCards.includes(card)) {
+			setpoints(0);
+			setclickedCards([]);
+			return;
 		}
 
-		setNewCardsArray(newCardsArray);
-		console.log(newCardsArray);
-	}
+		setclickedCards([...clickedCards, card]);
+		setpoints((p) => {
+			let newPoint = p+1;
+			if (newPoint > maxPoints) { setmaxPoints(newPoint) }
+			return newPoint;
+		});
+	};
+
+  for (let i = 0; i < 12; i++) {
+    cards.push(
+			<Card
+        key={i}
+        title={`Charizard ${i}`}
+        image={charizard}
+				handleCardClick={() => storeClickedCard(i)}
+			/>
+    );
+  }
+
+	const shuffle = () => {
+		let mockCards = [...cards];
+		const shuffledCards = [];
+
+		while (mockCards.length !== 0) {
+			let randomIndex = Math.floor(Math.random() * mockCards.length);
+			let randomCard = mockCards[randomIndex];
+			mockCards.splice(randomIndex, 1);
+			shuffledCards.push(randomCard);
+		}
+
+		setreorderedCards(shuffledCards);
+	};
 
   return (
 		<>
+			<h1>Points: {points}</h1>
+			<h1>Max Points: {maxPoints} </h1>
 			<div className='container'>
-				{newCardsArray.length === 0 ? cardArray : newCardsArray}
+				{reorderedCards};
 			</div>
-			<button onClick={handleClick}>Reorder</button>
+			<button onClick={shuffle}>click</button>
 		</>
   )
 }
