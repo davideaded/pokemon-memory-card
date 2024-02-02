@@ -3,9 +3,11 @@ import '../styles/card.css'
 import charizard from '../assets/charizard.png'
 
 export default function Cards() {
-	const [clickedCards, setClickedCards] = useState([]);
-	const [points, setPoints] = useState(0);
-	const [maxPoints, setMaxPoints] = useState(0);
+	const [gameStats, setGameStats] = useState({
+		points: 0,
+		maxPoints: 0,
+		clickedCards: []
+	});
 	const [pokemons, setPokemons] = useState([]);
 
 	useEffect(() => {
@@ -15,28 +17,31 @@ export default function Cards() {
 		}
 		setPokemons(newPokemons);
 	}, []);
-	
-	// useEffect(() => {
-	// 	shuffle();
-	// }, [clickedCards])
 
 	const handleCardClick = (poke) => {
-		if (clickedCards.includes(poke.key)) {
-			setPoints(0);
-			setClickedCards([]);
+		if (gameStats.clickedCards.includes(poke.key)) {
+			const newGameStat = { ...gameStats, points: 0, clickedCards: [] };
+			setGameStats(newGameStat)
 			return;
 		}
 
-		setClickedCards([...clickedCards, poke.key]);
-		setPoints((p) => {
-			let newPoint = p+1;
-			if (newPoint > maxPoints) { setMaxPoints(newPoint) }
-			return newPoint;
-		});
+		const newGameStat = {
+			...gameStats,
+			clickedCards: [...gameStats.clickedCards, poke.key],
+			points: gameStats.points + 1,
+			maxPoints: Math.max(gameStats.points + 1, gameStats.maxPoints),
+		}
+
+		setGameStats(newGameStat);
 	};
 
+	useEffect(() => {
+		if (pokemons.length !== 0) {
+			shuffle();
+		}
+	}, [gameStats]);
+
 	const shuffle = () => {
-		let mockCards = [...pokemons];
 		const shuffledCards = [...pokemons];
 
 		for (let i = shuffledCards.length - 1; i > 0; i--) {
@@ -48,15 +53,15 @@ export default function Cards() {
 		setPokemons(shuffledCards);
 	};
 
-	// if (pokemons.length === 0 ) {
-	// 	return <div>Loading...</div>
-	// }
+	if (pokemons.length === 0 ) {
+		return <div>Loading...</div>
+	}
 
 	return (
 		<>
 			<div className="header">
-				<h1>Points: {points} </h1>
-				<h1>Max points: {maxPoints} </h1>
+				<h1>Points: {gameStats.points} </h1>
+				<h1>Max points: {gameStats.maxPoints} </h1>
 			</div>
 
 			<div className="container">
