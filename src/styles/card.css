@@ -1,3 +1,23 @@
+.container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 20px;
+}
+
+.header {
+	font-size: 13px;
+	display: flex;
+	flex-direction: row;
+	margin-left: 50%;
+	justify-content: space-around;
+}
+
+.header h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
 .cardInfo {
 	width: 200px;
 	text-align: center;
