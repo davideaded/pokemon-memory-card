@@ -42,3 +42,12 @@
 .cardInfo h1 {
 	font-size: 30px;
 }
+
+@media (prefers-color-scheme: dark) {
+	.cardInfo:hover {
+		box-shadow: 0px 20px 20px rgba(234, 217, 217, 0.1);
+		transition: 0.2s;
+		cursor: pointer;
+	}
+
+}

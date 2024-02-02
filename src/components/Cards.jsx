@@ -7,7 +7,8 @@ export default function Cards() {
 	const [gameStats, setGameStats] = useState({
 		points: 0,
 		maxPoints: 0,
-		clickedCards: []
+		clickedCards: [],
+		gameOver: false,
 	});
 	const [pokemons, setPokemons] = useState([]);
 
@@ -26,11 +27,13 @@ export default function Cards() {
 			return;
 		}
 
+		const newGamePoint = gameStats.points + 1;
 		const newGameStat = {
 			...gameStats,
 			clickedCards: [...gameStats.clickedCards, poke.key],
-			points: gameStats.points + 1,
-			maxPoints: Math.max(gameStats.points + 1, gameStats.maxPoints),
+			points: newGamePoint,
+			maxPoints: Math.max(newGamePoint, gameStats.maxPoints),
+			gameOver: newGamePoint === pokemons.length ? true : false,
 		}
 
 		setGameStats(newGameStat);
@@ -50,7 +53,6 @@ export default function Cards() {
 			[shuffledCards[i], shuffledCards[j]] = [shuffledCards[j], shuffledCards[i]];
 		}
 
-		console.log(shuffledCards);
 		setPokemons(shuffledCards);
 	};
 
@@ -61,8 +63,17 @@ export default function Cards() {
 	return (
 		<>
 			<div className="header">
-				<h1>Points: {gameStats.points} </h1>
-				<h1>Max points: {gameStats.maxPoints} </h1>
+			{
+				gameStats.gameOver && <h1>You won!</h1>
+			}
+			{
+				!gameStats.gameOver && (
+					<>
+						<h1>Points: {gameStats.points}</h1>
+						<h1>Max points: {gameStats.maxPoints}</h1>
+					</>
+				)
+			}
 			</div>
 
 			<div className="container">
