@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import '../styles/card.css'
-import charizard from '../assets/charizard.png'
+import FetchPokemons from '../api/PokeApi.jsx'
 
 export default function Cards() {
+	const newPokemons = FetchPokemons();
 	const [gameStats, setGameStats] = useState({
 		points: 0,
 		maxPoints: 0,
@@ -11,12 +12,12 @@ export default function Cards() {
 	const [pokemons, setPokemons] = useState([]);
 
 	useEffect(() => {
-		const newPokemons = [];
-		for (let i = 0; i < 12; i++) {
-			newPokemons.push({ key: i, name: `charizard${i}`, image: charizard });
+		const fetchedPokemons = [];
+		for (let pokemon of newPokemons) {
+			fetchedPokemons.push({ key: pokemon.key, name: pokemon.name, image: pokemon.image });
 		}
-		setPokemons(newPokemons);
-	}, []);
+		setPokemons(fetchedPokemons);
+	}, [newPokemons]);
 
 	const handleCardClick = (poke) => {
 		if (gameStats.clickedCards.includes(poke.key)) {
