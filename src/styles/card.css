@@ -8,9 +8,12 @@
 .header {
 	font-size: 13px;
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	margin-left: 50%;
 	justify-content: space-around;
+	position: fixed;
+	top: 0;
+	right: 0;
 }
 
 .header h1 {
